@@ -1,6 +1,7 @@
 #reddit curationBot and mailer
 
-import praw \\ imports praw to use reddit API, google praw python for more info
+#imports praw to use reddit API, google praw python for more info
+import praw 
 
 totalList = str()
 print('You are generating your Digest')
