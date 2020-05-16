@@ -1,0 +1,52 @@
+#reddit curationBot and mailer
+
+import praw \\ imports praw to use reddit API, google praw python for more info
+
+totalList = str()
+print('You are generating your Digest')
+
+#create the object from the imported modules
+
+reddit = praw.Reddit(client_id='id number',
+                     client_secret='secret',
+                     password='password',
+                     username='username',
+                     user_agent='curationBot by ZNorman')
+
+#generates top fifty posts
+try:
+    for submission in reddit.subreddit("sub1+sub2+sub3=sub4+sub5").hot(limit=50):
+        topFiftyList= str("Title: " + str(submission.title) + "\n" +
+                         "Subreddit: " + str(submission.subreddit) + "\n" +
+                         "Link: " + str(submission.url) + "\n" +
+                         "---------------------------------\n")
+        totalList += topFiftyList
+except:
+     print('Try ended')
+
+print(totalList)
+print('List has been made')
+
+#Mailer begins below
+
+import smtplib, ssl
+
+#creates message body
+messBody = "Subject: Top Fifty - Your Daily Reddit Digest" + "\n" + "\n" + totalList + "\n" + "This list was provided by BeepBoopBotBoy." + "\n" + "This message is sent from Python."
+
+#encodes message to fix errors from emojis and other special characters
+encodedMessage = messBody.encode('utf-8')
+
+#Logs into gmail account and sends email containing reddit top fifty list
+
+port = 465  # For SSL
+smtp_server = "smtp.gmail.com"
+sender_email = "sender@gmail.com"  # Enter your address
+receiver_email = "receiver@live.com"  # Enter receiver address
+password = "gmail password"
+message = encodedMessage
+
+context = ssl.create_default_context()
+with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+     server.login(sender_email, password)
+     server.sendmail(sender_email, receiver_email, message)
